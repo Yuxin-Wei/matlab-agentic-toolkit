@@ -1,5 +1,5 @@
-# MATLAB&reg; Agentic Toolkit
-The MATLAB Agentic Toolkit brings trusted MATLAB capabilities to AI agents, making engineering and scientific workflows agent-ready.
+# MATLAB Agentic Toolkit
+The MATLAB&reg; Agentic Toolkit brings trusted MATLAB capabilities to AI agents, making engineering and scientific workflows agent-ready.
 
 ## What It Does
 AI coding agents are increasingly capable with MATLAB — but capability isn't expertise. Without guidance, agents reinvent what toolbox functions already provide, miss features they don't know about, and burn through extra steps that an experienced MATLAB user would skip. The MATLAB Agentic Toolkit gives your agent the knowledge and context to work efficiently from the start.
@@ -9,7 +9,7 @@ The toolkit connects your AI agent to MATLAB and equips it with expert knowledge
 The toolkit works with today's leading AI coding agents and is designed to evolve as the landscape changes.
 
 > [!IMPORTANT]
-> To use AI agents with Simulink, install the [Simulink Agentic Toolkit](https://github.com/matlab/simulink-agentic-toolkit).
+> To use AI agents with Simulink&reg;, install the [Simulink Agentic Toolkit](https://github.com/matlab/simulink-agentic-toolkit). If you plan to use both toolkits, consider the [alternative installer](#alternative-installer) — it sets up both in one step.
 
 ## How It Works
 The toolkit has two jobs. First, it gives your agent a live connection to MATLAB — so it can run code, execute tests, and analyze results, not just read and write files. Second, it provides curated expertise (called *skills*) that teach your agent how an experienced MATLAB engineer would approach a task. Your agent reads the relevant skill, then uses the MATLAB connection to do the work.
@@ -69,6 +69,21 @@ Setup looks for your MATLAB installation(s), downloads the MCP server, writes yo
 
 If you installed the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) yourself, you just need skills. See [Adding Skills Only](GETTING_STARTED.md#adding-skills-only) in the Getting Started guide.
 
+<a id="alternative-installer"></a>
+### Alternative Installer (experimental)
+
+The Simulink Agentic Toolkit provides a MATLAB-based installer that can install and configure both toolkits. This installer offers several benefits over the current `matlab-agentic-toolkit-setup` skill:
+* It can install both the MATLAB and Simulink Agentic Toolkits. It is recommended for users who would like to use both
+* It supports the MATLAB MCP Core Server option to connect to an existing MATLAB session (`--matlab-session-mode=existing`)
+* It provides the option to configure your agent to use the toolkits for individual projects, not just globally
+* This installer does not consume agent tokens
+
+The tradeoff is that it is newer and less thoroughly tested than the agent-driven setup above.
+
+1. Download `agenticToolkitInstaller.mltbx` from the [Simulink Agentic Toolkit releases page](https://github.com/matlab/simulink-agentic-toolkit/releases).
+2. Open the downloaded file to install the installer add-on.
+3. In MATLAB, run: `setupAgenticToolkit`
+
 ### Verify
 Ask your agent:
 
@@ -113,22 +128,19 @@ Skills are organized in the [skills catalog](skills-catalog/).
 
 <!-- END SKILLS -->
 
-## Trademarks
-MATLAB and Simulink are registered trademarks of The MathWorks, Inc. See [mathworks.com/trademarks](https://www.mathworks.com/trademarks) for a list of additional trademarks. Other product or brand names may be trademarks or registered trademarks of their respective holders.
-
 ## Contributing
 We welcome feedback through [GitHub Issues](https://github.com/matlab/matlab-agentic-toolkit/issues). Pull requests are reviewed for ideas and feedback but are not merged from external contributors. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## Licensing and Usage 
-The MATLAB Agentic Toolkit is licensed with [MathWorks BSD-3 Clause](LICENSE.md). It is solely for use in conjunction with MathWorks products and service offerings.
-
-## Contact Support
-MathWorks encourages you to use this repository and provide feedback. To request technical support or submit an enhancement request, [create a GitHub issue](https://github.com/matlab/matlab-agentic-toolkit/issues) or email [genai-support@mathworks.com](mailto:genai-support@mathworks.com). For MATLAB MCP Core Server issues and support, see the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) repository.
-
-#
+## Security Considerations
 When using the MATLAB Agentic Toolkit and MATLAB MCP Core Server, you should thoroughly review and validate all tool calls before you run them. Always keep a human in the loop for important actions and only proceed once you are confident the call will do exactly what you expect. For more information, see [User Interaction Model (MCP)](https://modelcontextprotocol.io/specification/2025-06-18/server/tools#user-interaction-model) and [Security Considerations (MCP)](https://modelcontextprotocol.io/specification/2025-06-18/server/tools#security-considerations).
 
-The MATLAB MCP Core server may only be used with MATLAB installations that are used as a Personal Automation Server. Use with a central Automation Server is not allowed. Please contact MathWorks if Automation Server use is required. For more information see the [Program Offering Guide (MathWorks)](https://www.mathworks.com/help//pdf_doc/offering/offering.pdf).
+## Licensing and Usage
+The license is available in the [LICENSE.md](LICENSE.md) file in this GitHub repository.
+
+MCP servers are only permitted to be used with MATLAB in accordance with the MathWorks Software License Agreement, and must not be shared by multiple users. Contact MathWorks if you need to support shared or centralized server use.
+
+## Contact Support
+MathWorks encourages you to use this repository and provide feedback. To request technical support or submit an enhancement request, [create a GitHub issue](https://github.com/matlab/matlab-agentic-toolkit/issues) or [contact technical support](https://www.mathworks.com/support/contact_us.html). For MATLAB MCP Core Server issues and support, see the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) repository.
 
 ----
 

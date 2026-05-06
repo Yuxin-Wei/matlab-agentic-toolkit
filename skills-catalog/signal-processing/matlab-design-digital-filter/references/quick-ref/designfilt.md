@@ -174,18 +174,9 @@ d = designfilt("bandpassfir", ...
 
 ---
 
-## iirnotch / iircomb (alternative to designfilt)
+## Legacy notch APIs
 
-For simple notch filters, `iirnotch` is a quick alternative:
-
-```matlab
-wo = f0/(Fs/2);      % Normalized frequency
-bw = bandwidth/(Fs/2);  % Normalized bandwidth
-[b, a] = iirnotch(wo, bw);
-y = filter(b, a, x);
-```
-
-**Note**: Returns `[b, a]` coefficients, not a digitalFilter object.
+- `iirnotch` — deprecated (to be removed). Use `designfilt("notchiir")` instead.
 
 
 ----

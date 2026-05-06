@@ -37,28 +37,28 @@
 
 ## Quick-Ref Summary
 
-| Quick-ref | Purpose | ~Lines |
-|-----------|---------|--------|
-| `quick-ref/designfilt.md` | Response types, params, gotchas | ~190 |
-| `quick-ref/general-iir-fir.md` | High-order IIR, long FIR, freqz, filtfilt | ~125 |
-| `quick-ref/efficient-filtering.md` | Narrow transitions, MPIS comparison | ~130 |
-| `quick-ref/filter-analyzer.md` | Filter Analyzer API | ~100 |
-| `quick-ref/multirate-offline.md` | Offline zero-phase with rate change | ~60 |
-| `quick-ref/multirate-streaming.md` | Streaming polyphase pipelines | ~75 |
-| `quick-ref/multistage-ifir.md` | IFIR at constant rate | ~95 |
+| Quick-ref | Purpose |
+|-----------|---------|
+| `quick-ref/designfilt.md` | Response types, params, gotchas |
+| `quick-ref/general-iir-fir.md` | High-order IIR, long FIR, freqz, filtfilt |
+| `quick-ref/efficient-filtering.md` | Narrow transitions, MPIS comparison |
+| `quick-ref/filter-analyzer.md` | Filter Analyzer API |
+| `quick-ref/multirate-offline.md` | Offline zero-phase with rate change |
+| `quick-ref/multirate-streaming.md` | Streaming polyphase pipelines |
+| `quick-ref/multistage-ifir.md` | IFIR at constant rate |
 
 ---
 
 ## Guides (deep reference, rarely needed full)
 
-| Guide | Content | ~Lines |
-|-------|---------|--------|
-| `patterns.md` | Streaming wrappers, advanced patterns | ~400 |
-| `best-practices.md` | Methodology, validation flow | ~375 |
-| `filter-analyzer.md` | Full Filter Analyzer reference | ~515 |
-| `multirate.md` | Complete multirate theory + examples | ~405 |
-| `efficient-filtering.md` | Deep dive on narrow transitions | ~375 |
-| `multistage-ifir.md` | IFIR theory and variants | ~290 |
+| Guide | Content |
+|-------|---------|
+| `patterns.md` | Streaming wrappers, advanced patterns |
+| `best-practices.md` | Methodology, validation flow |
+| `filter-analyzer.md` | Full Filter Analyzer reference |
+| `multirate.md` | Complete multirate theory + examples |
+| `efficient-filtering.md` | Deep dive on narrow transitions |
+| `multistage-ifir.md` | IFIR theory and variants |
 
 
 ----

@@ -43,7 +43,7 @@
     },
     {
       "name": "matlab-core",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "description": "Foundational MATLAB skills for AI coding agents. Debugging, testing, code review, and Live Script creation. Every toolkit user needs these skills, and other plugins can assume they are available.",
       "author": {
         "name": "MathWorks"
@@ -114,7 +114,7 @@
     },
     {
       "name": "signal-processing",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Signal processing skills for AI coding agents. Signal Processing Toolbox, DSP System Toolbox, Audio Toolbox, and Wavelet Toolbox.",
       "author": {
         "name": "MathWorks"
@@ -133,7 +133,7 @@
     },
     {
       "name": "toolkit",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "description": "Setup and management for the MATLAB Agentic Toolkit. Detects MATLAB, installs the MCP server, registers with your AI coding agent, and verifies the environment.",
       "author": {
         "name": "MathWorks"

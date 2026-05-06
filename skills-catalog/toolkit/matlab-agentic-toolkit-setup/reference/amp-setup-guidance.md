@@ -39,7 +39,7 @@ The MCP server must be in global settings (not bundled in a skill) because it is
 **Windows:** Paths in JSON must have backslashes escaped — either use forward slashes (`C:/Program Files/MATLAB/R2025b`) or double every backslash (`C:\\Program Files\\MATLAB\\R2025b`). Raw backslashes produce invalid JSON. Use semicolons (`;`) instead of colons (`:`) to separate multiple paths in `amp.skills.path`.
 
 Replace:
-- `<MCP_SERVER_PATH>` — absolute path to the binary (e.g., `~/.local/bin/matlab-mcp-core-server`)
+- `<MCP_SERVER_PATH>` — absolute path to the binary (e.g., `~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server`)
 - `<MATLAB_ROOT>` — absolute path to the MATLAB installation
 - `<DISPLAY_MODE>` — `desktop` (default) or `nodesktop`
 - `<TOOLKIT_ROOT>` — absolute path to the cloned toolkit repository
@@ -151,7 +151,7 @@ After the user restarts Amp:
 > - If `amp mcp doctor` shows `workspace: untrusted`, you may be running Amp from the toolkit directory — launch Amp from your actual work repository instead
 > - If `amp mcp doctor` shows `error - MCP server is not allowed by MCP permissions`, your `amp.mcpPermissions` rules are blocking the server (see Step 3)
 > - Check `~/.config/amp/settings.json` (or `%USERPROFILE%\.config\amp\settings.json` on Windows) contains `amp.mcpServers.matlab`
-> - Verify the binary runs: `~/.local/bin/matlab-mcp-core-server --version` (or `%USERPROFILE%\.local\bin\matlab-mcp-core-server.exe --version` on Windows)
+> - Verify the binary runs: `~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server --version` (or `%USERPROFILE%\.matlab\agentic-toolkits\bin\matlab-mcp-core-server.exe --version` on Windows)
 > - Run `amp skill list` to confirm MATLAB skills are visible
 
 ----

@@ -33,7 +33,7 @@ Full setup clones the toolkit repository, then uses your agent to automate the e
 
 ### What Setup Does
 
-1. **Installs the MCP server** — downloads the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) binary to `~/.local/bin/`
+1. **Installs the MCP server** — downloads the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) binary to `~/.matlab/agentic-toolkits/bin/`
 2. **Configures your agent** — connects the MCP server to your agent via global config, defaulting to the most recent MATLAB found (you can change this during setup)
 3. **Registers skills** — adds MATLAB skills via the platform's native plugin system or global skill links
 4. **Verifies** — confirms the MCP server can reach MATLAB and reports an environment summary
@@ -192,33 +192,34 @@ Go to the [MATLAB MCP Core Server releases](https://github.com/matlab/matlab-mcp
 
 ### 2. Install the binary
 
-Place the downloaded binary in a directory on your PATH (e.g., `~/.local/bin/`), rename it to `matlab-mcp-core-server` (or `matlab-mcp-core-server.exe` on Windows), and make it executable:
+Place the downloaded binary in `~/.matlab/agentic-toolkits/bin/`, rename it to `matlab-mcp-core-server` (or `matlab-mcp-core-server.exe` on Windows), and make it executable:
 
 **macOS:**
 ```bash
-mkdir -p ~/.local/bin
-mv ~/Downloads/matlab-mcp-core-server-maca64 ~/.local/bin/matlab-mcp-core-server
-chmod +x ~/.local/bin/matlab-mcp-core-server
-xattr -d com.apple.quarantine ~/.local/bin/matlab-mcp-core-server 2>/dev/null
+mkdir -p ~/.matlab/agentic-toolkits/bin
+mv ~/Downloads/matlab-mcp-core-server-maca64 ~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server
+chmod +x ~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server
+xattr -d com.apple.quarantine ~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server 2>/dev/null
 ```
 
 **Linux:**
 ```bash
-mkdir -p ~/.local/bin
-mv ~/Downloads/matlab-mcp-core-server-glnxa64 ~/.local/bin/matlab-mcp-core-server
-chmod +x ~/.local/bin/matlab-mcp-core-server
+mkdir -p ~/.matlab/agentic-toolkits/bin
+mv ~/Downloads/matlab-mcp-core-server-glnxa64 ~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server
+chmod +x ~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Move-Item ~\Downloads\matlab-mcp-core-server-win64.exe ~\.local\bin\matlab-mcp-core-server.exe
-Unblock-File -Path "$env:USERPROFILE\.local\bin\matlab-mcp-core-server.exe"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.matlab\agentic-toolkits\bin"
+Move-Item ~\Downloads\matlab-mcp-core-server-win64.exe ~\.matlab\agentic-toolkits\bin\matlab-mcp-core-server.exe
+Unblock-File -Path "$env:USERPROFILE\.matlab\agentic-toolkits\bin\matlab-mcp-core-server.exe"
 ```
 
 ### 3. Verify the binary runs
 
 ```bash
-~/.local/bin/matlab-mcp-core-server --version
+~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server --version
 ```
 
 > **macOS note:** If macOS blocks the binary (Gatekeeper), go to **System Settings > Privacy & Security** and click **"Allow Anyway"** next to the blocked binary.
@@ -329,10 +330,10 @@ Then edit `.vscode/mcp.json` to replace the placeholder paths with your actual M
 | Problem | Likely Cause | Fix |
 |---------|-------------|-----|
 | Setup can't find MATLAB | Non-standard install location | Provide the path when prompted |
-| MCP server download fails | Network/proxy/firewall | Download manually from [GitHub releases](https://github.com/matlab/matlab-mcp-core-server/releases), place in `~/.local/bin/`, re-run setup |
+| MCP server download fails | Network/proxy/firewall | Download manually from [GitHub releases](https://github.com/matlab/matlab-mcp-core-server/releases), place in `~/.matlab/agentic-toolkits/bin/`, re-run setup |
 | macOS blocks the MCP server binary | Gatekeeper quarantine | Setup handles this automatically. If still blocked (MDM), go to System Settings > Privacy & Security > Allow Anyway |
 | Agent doesn't list MATLAB skills | Plugin not installed or skills not linked | Re-run setup; for Claude Code, try `claude plugin install matlab-core@matlab-agentic-toolkit` |
-| MCP tools fail to connect | MCP server binary missing or wrong path in configuration | Re-run setup to regenerate configuration. Verify binary exists: `~/.local/bin/matlab-mcp-core-server --version` |
+| MCP tools fail to connect | MCP server binary missing or wrong path in configuration | Re-run setup to regenerate configuration. Verify binary exists: `~/.matlab/agentic-toolkits/bin/matlab-mcp-core-server --version` |
 | `evaluate_matlab_code` returns errors | Wrong `--matlab-root` path, license issue, or MATLAB startup failure | Verify MATLAB can start: `<matlab-root>/bin/matlab -nodesktop -r "disp('ok'),quit"`. Check license status. Re-run setup to correct the MATLAB root path |
 | Codex tool calls time out | Default tool timeout too short for MATLAB | Add `tool_timeout_sec = 600` (or higher) to `[mcp_servers.matlab]` in `~/.codex/config.toml` |
 | Simulink fails in Codex on Windows | Missing `WINDIR` environment variable | Add `env_vars = ['WINDIR']` to `[mcp_servers.matlab]` in `~/.codex/config.toml` |
