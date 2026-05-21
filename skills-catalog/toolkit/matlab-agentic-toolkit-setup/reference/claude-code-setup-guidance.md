@@ -38,17 +38,29 @@ Claude's native prompt will ask the user to choose scope for each plugin. Do NOT
 
 ### Step 3: Register MCP server
 
-Use the `claude mcp add` CLI to register the MATLAB MCP server at user scope (available in all projects):
+Use the `claude mcp add` CLI to register the MATLAB MCP server at user scope (available in all projects).
+
+**Important:** You must run this command at the system terminal (via the Bash tool), not as an inline Claude Code command. If a `matlab` entry already exists, the command will overwrite it, so this command should only be done if required by the setup plan.
+
+#### macOS / Linux
 
 ```bash
 claude mcp add-json -s user matlab '{"command":"<MCP_SERVER_PATH>","args":["--matlab-root","<MATLAB_ROOT>","--matlab-display-mode","<DISPLAY_MODE>"]}'
 ```
 
+#### Windows (CMD or PowerShell)
+
+Do **NOT** use `claude mcp add-json` on Windows — JSON-in-a-string quoting is unreliable across CMD and PowerShell. Use the positional form instead:
+
+```cmd
+claude mcp add matlab -s user -- <MCP_SERVER_PATH> --matlab-root <MATLAB_ROOT> --matlab-display-mode <DISPLAY_MODE>
+```
+
+Paths with spaces must be quoted (e.g., `"C:\Program Files\MATLAB\R2025a"`), but no JSON escaping is needed.
+
+#### All platforms
+
 Replace `<MCP_SERVER_PATH>`, `<MATLAB_ROOT>`, and `<DISPLAY_MODE>` with the values from the setup plan.
-
-**Important:** This command must run at the system terminal (via the Bash tool), not as an inline Claude Code command. If a `matlab` entry already exists, the command will overwrite it.
-
-**Windows path escaping:** The JSON string passed to `claude mcp add-json` must have backslashes doubled. For example, use `C:\\Users\\Name\\.local\\bin\\matlab-mcp-core-server.exe`, not `C:\Users\Name\.local\bin\matlab-mcp-core-server.exe`. Single backslashes produce invalid JSON escape sequences (`\U`, `\N`, etc.).
 
 The MCP tools become available in the next session (or immediately if the session is restarted).
 

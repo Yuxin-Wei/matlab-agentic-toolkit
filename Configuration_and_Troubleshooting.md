@@ -1,6 +1,6 @@
-# Getting Started with the MATLAB&reg; Agentic Toolkit
+# Configuration and Troubleshooting
 
-This guide walks you through setup of the MATLAB Agentic Toolkit. Once complete, the toolkit will be configured globally, for you to use on any project.  
+This guide walks you through setup of the MATLAB&reg; Agentic Toolkit. Once complete, the toolkit will be configured globally, for you to use on any project.  
 
 > For a project overview, tool/skill reference, and documentation links, see the [README](README.md).
 
@@ -12,9 +12,15 @@ This guide walks you through setup of the MATLAB Agentic Toolkit. Once complete,
 
 Before you begin, make sure you have:
 
-- [ ] **MATLAB R2020b or later** installed
-- [ ] **An AI coding agent** that supports MCP — see [Supported Platforms](README.md#supported-platforms)
-- [ ] **Git&trade;** (to clone the toolkit)
+- **MATLAB R2020b or later** installed
+- **An AI coding agent** that supports MCP
+    - Claude Code  
+    - GitHub&reg; Copilot  
+    - OpenAI&reg; Codex  
+    - Gemini&trade; CLI  
+    - Sourcegraph Amp
+
+- **Git&trade;** (to clone the toolkit)
 
 ---
 
@@ -144,13 +150,28 @@ You can install the toolkit as a Gemini CLI extension. The extension does not in
 
 If you already have the [MATLAB MCP Core Server](https://github.com/matlab/matlab-mcp-core-server) installed and configured, you only need skills.
 
-### Claude Code (no clone required)
+Skills are organized into **skill groups** — each subdirectory under [`skills-catalog/`](skills-catalog/) is a separately installable group. The `matlab-core` group is the essential starting point, but you can add domain-specific groups for additional expertise. To browse available groups and their contents, see the [`skills-catalog/` README](skills-catalog/README.md).
 
-Add skills directly via the plugin marketplace:
+### Claude Code
+
+Each skill group is delivered as a Claude Code plugin. Add the marketplace, then install one or more plugins by group name:
 
 ```bash
 claude plugin marketplace add "https://github.com/matlab/matlab-agentic-toolkit"
 claude plugin install matlab-core@matlab-agentic-toolkit
+```
+
+To install additional skill groups, use the same pattern with the group's directory name:
+
+```bash
+claude plugin install <group-name>@matlab-agentic-toolkit
+```
+
+For example, to add signal processing and wireless communications skills:
+
+```bash
+claude plugin install signal-processing@matlab-agentic-toolkit
+claude plugin install wireless-communications@matlab-agentic-toolkit
 ```
 
 Choose your preferred scope (per-project, per-user, or global) when prompted. Your existing MCP configuration is not modified.
@@ -160,18 +181,37 @@ Choose your preferred scope (per-project, per-user, or global) when prompted. Yo
 
 ### Other Platforms
 
-Point your agent's skill or prompt directory at `skills-catalog/matlab-core/`. Each skill is a self-contained `SKILL.md` with a `manifest.yaml`.
+Clone the toolkit if you haven't already:
 
-For platforms that discover skills from `~/.agents/skills/`, create symlinks:
+```bash
+git clone https://github.com/matlab/matlab-agentic-toolkit.git
+```
+
+Each skill group is a directory under `skills-catalog/` containing one or more skills (each skill has its own `SKILL.md` and `manifest.yaml`).
+
+**GitHub Copilot, OpenAI Codex, Gemini CLI** — these platforms discover skills from `~/.agents/skills/`. Create symlinks for each group you want. For example, to install `matlab-core` and `signal-processing`:
 
 ```bash
 mkdir -p ~/.agents/skills
-for skill in /path/to/matlab-agentic-toolkit/skills-catalog/matlab-core/*/; do
-  ln -s "$skill" ~/.agents/skills/$(basename "$skill")
+for group in matlab-core signal-processing; do
+  for skill in /path/to/matlab-agentic-toolkit/skills-catalog/$group/*/; do
+    ln -s "$skill" ~/.agents/skills/$(basename "$skill")
+  done
 done
 ```
 
-Replace `/path/to/matlab-agentic-toolkit` with the actual path to your toolkit clone.
+Replace `/path/to/matlab-agentic-toolkit` with the actual path to your toolkit clone, and list whichever groups you need.
+
+**Sourcegraph Amp** — Amp reads skills directly from paths listed in `~/.config/amp/settings.json`. Add a `skills-catalog/<group>` path entry for each group you want:
+
+```json
+{
+  "amp.skills.path": [
+    "/path/to/matlab-agentic-toolkit/skills-catalog/matlab-core",
+    "/path/to/matlab-agentic-toolkit/skills-catalog/signal-processing"
+  ]
+}
+```
 
 ---
 

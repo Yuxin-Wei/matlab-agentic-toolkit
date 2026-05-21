@@ -1,0 +1,9 @@
+# Copyright 2026 The MathWorks, Inc.
+description: >
+  Test and measurement skills for AI coding agents. Data Acquisition Toolbox
+  and Instrument Control Toolbox.
+keywords:
+  - matlab
+  - data-acquisition
+  - instrument-control
+  - test-and-measurement

@@ -19,7 +19,7 @@ Reference MCP server configurations for manual setup. Each file is a starting po
 | `vscode-mcp.json` | GitHub Copilot / VS Code | `.vscode/mcp.json` in each project |
 | `amp-settings.json` | Sourcegraph Amp | `~/.config/amp/settings.json` (global) or `.amp/settings.json` (project) |
 
-For full instructions, see the [Getting Started guide](../GETTING_STARTED.md).
+For full instructions, see [Configuration and Troubleshooting](../Configuration_and_Troubleshooting.md).
 
 ----
 

@@ -203,4 +203,48 @@ snrWbDb = convertSNR(snrscDb, "snrsc", "snr", ...
 % snrWbDb = 28.24 - 10*log10(2048/1200) = 28.24 - 2.32 = 25.92 dB
 ```
 
+## Estimate required Eb/No
+
+Use this section when the user asks for the Eb/No or SNR needed to achieve a target BER, BLER, or FER.
+
+### Decision tree
+
+1. **Modulation supported by `berawgn` or `berfading`?**
+   - Yes → Use the analytical function with `fzero` or `interp1` to find the Eb/No crossing point.
+   - No → Run Monte Carlo simulations sweeping Eb/No.
+
+2. **Channel type:**
+   - **AWGN:** Use `berawgn(ebnoRange, modType, M)` directly.
+   - **Flat or frequency-selective fading (single-carrier):** Use `berfading(ebnoRange, modType, M, ...)` if supported.
+   - **OFDM:** Assume flat fading per subcarrier. If the modulation is supported by `berawgn` or `berfading`, use the analytical approach per subcarrier; otherwise, simulate.
+
+3. **Converting result to wideband SNR:**
+   - Convert per-subcarrier Eb/No to wideband SNR using the two-step process (see "Two-step OFDM conversion" above) to set the noise level for `awgn`.
+
+### Example: Find Eb/No for target BER using fzero
+
+```matlab
+% Find Eb/No for BER = 1e-5 with 16-QAM over AWGN
+targetBER = 1e-5;
+M = 16;
+f = @(ebnoDb) berawgn(ebnoDb, 'qam', M) - targetBER;
+requiredEbNo = fzero(f, [0 20]);
+% requiredEbNo ≈ 13.4 dB
+```
+
+### Example: Find Eb/No for target BER using interp1
+
+```matlab
+% Sweep Eb/No and interpolate
+ebnoRange = 0:0.1:20;
+ber = berawgn(ebnoRange, 'qam', 16);
+targetBER = 1e-5;
+requiredEbNo = interp1(ber, ebnoRange, targetBER);
+% requiredEbNo ≈ 13.4 dB (accuracy depends on step size)
+```
+
+### When to simulate
+
+If the scenario is not supported analytically (e.g., custom modulation, non-standard channel model, or coded systems where `berfading` doesn't apply), run Monte Carlo simulations sweeping Eb/No and use `interp1` on the simulated BER curve.
+
 Copyright 2026 The MathWorks, Inc.

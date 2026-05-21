@@ -6,8 +6,50 @@
   },
   "plugins": [
     {
-      "name": "image-processing-and-computer-vision",
+      "name": "automotive",
       "version": "0.1.0",
+      "description": "Automotive skills for AI coding agents. Automated Driving Toolbox, RoadRunner, RoadRunner Scene Builder, and MATLAB-side vehicle dynamics workflows.",
+      "author": {
+        "name": "MathWorks"
+      },
+      "keywords": [
+        "matlab",
+        "automotive",
+        "automated-driving",
+        "roadrunner",
+        "roadrunner-scene-builder",
+        "rrhd",
+        "hd-map",
+        "lanelet2",
+        "scene-import",
+        "asset-mapping",
+        "vehicle-dynamics"
+      ],
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills-catalog/automotive/"
+    },
+    {
+      "name": "computational-biology",
+      "version": "0.1.0",
+      "description": "Computational biology skills for AI coding agents. Bioinformatics Toolbox and SimBiology.",
+      "author": {
+        "name": "MathWorks"
+      },
+      "keywords": [
+        "matlab",
+        "bioinformatics",
+        "simbiology"
+      ],
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills-catalog/computational-biology/"
+    },
+    {
+      "name": "image-processing-and-computer-vision",
+      "version": "0.2.0",
       "description": "Image processing and computer vision skills for AI coding agents. Image Processing Toolbox, Computer Vision Toolbox, Lidar Toolbox, and Mapping Toolbox.",
       "author": {
         "name": "MathWorks"
@@ -61,8 +103,25 @@
       "skills": "./skills-catalog/matlab-core/"
     },
     {
-      "name": "matlab-software-development",
+      "name": "matlab-data-import-and-analysis",
       "version": "0.1.0",
+      "description": "Core MATLAB data import and analysis skills for AI coding agents. File I/O, preprocessing, tables, timetables, and data exploration.",
+      "author": {
+        "name": "MathWorks"
+      },
+      "keywords": [
+        "matlab",
+        "data-import",
+        "data-analysis"
+      ],
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills-catalog/matlab-data-import-and-analysis/"
+    },
+    {
+      "name": "matlab-software-development",
+      "version": "0.2.0",
       "description": "MATLAB software development skills for AI coding agents. Source control, build tools, packaging, code modernization, and development workflows.",
       "author": {
         "name": "MathWorks"
@@ -71,7 +130,8 @@
         "matlab",
         "software-development",
         "packaging",
-        "modernization"
+        "modernization",
+        "performance"
       ],
       "source": "./",
       "category": "development",
@@ -80,7 +140,7 @@
     },
     {
       "name": "reporting-and-database-access",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Reporting and database access skills for AI coding agents. Database Toolbox and MATLAB Report Generator.",
       "author": {
         "name": "MathWorks"
@@ -97,7 +157,7 @@
     },
     {
       "name": "rf-and-mixed-signal",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "RF and mixed-signal skills for AI coding agents. RF Toolbox and Mixed-Signal Blockset.",
       "author": {
         "name": "MathWorks"
@@ -111,6 +171,24 @@
       "category": "development",
       "strict": false,
       "skills": "./skills-catalog/rf-and-mixed-signal/"
+    },
+    {
+      "name": "robotics-and-autonomous-systems",
+      "version": "0.1.0",
+      "description": "Robotics and autonomous systems skills for AI coding agents. Robotics System Toolbox, Navigation Toolbox, and ROS Toolbox.",
+      "author": {
+        "name": "MathWorks"
+      },
+      "keywords": [
+        "matlab",
+        "robotics",
+        "navigation",
+        "ros"
+      ],
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills-catalog/robotics-and-autonomous-systems/"
     },
     {
       "name": "signal-processing",
@@ -132,8 +210,26 @@
       "skills": "./skills-catalog/signal-processing/"
     },
     {
+      "name": "test-and-measurement",
+      "version": "0.1.0",
+      "description": "Test and measurement skills for AI coding agents. Data Acquisition Toolbox and Instrument Control Toolbox.",
+      "author": {
+        "name": "MathWorks"
+      },
+      "keywords": [
+        "matlab",
+        "data-acquisition",
+        "instrument-control",
+        "test-and-measurement"
+      ],
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills-catalog/test-and-measurement/"
+    },
+    {
       "name": "toolkit",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "description": "Setup and management for the MATLAB Agentic Toolkit. Detects MATLAB, installs the MCP server, registers with your AI coding agent, and verifies the environment.",
       "author": {
         "name": "MathWorks"
@@ -151,7 +247,7 @@
     },
     {
       "name": "wireless-communications",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Wireless communications skills for AI coding agents. Communications Toolbox, 5G Toolbox, LTE Toolbox, WLAN Toolbox, Antenna Toolbox, and Satellite Communications Toolbox.",
       "author": {
         "name": "MathWorks"
@@ -161,7 +257,19 @@
         "wireless",
         "communications",
         "5g",
-        "lte"
+        "lte",
+        "satellite",
+        "gnss",
+        "gps",
+        "galileo",
+        "navic",
+        "dvb-s2",
+        "dvb-s2x",
+        "dvb-rcs2",
+        "ccsds",
+        "superframes",
+        "tm-tc",
+        "sda"
       ],
       "source": "./",
       "category": "development",
