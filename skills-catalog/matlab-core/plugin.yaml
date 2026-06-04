@@ -1,8 +1,6 @@
 # Copyright 2026 The MathWorks, Inc.
 description: >
-  Foundational MATLAB skills for AI coding agents. Debugging, testing, code
-  review, and Live Script creation. Every toolkit user needs these skills, and
-  other plugins can assume they are available.
+  Create, debug, test, review, and manage MATLAB code and installations. Every toolkit user needs these.
 keywords:
   - matlab
   - debugging

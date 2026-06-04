@@ -130,7 +130,7 @@ cs.SensitivityAnalysisOptions.Outputs = [];
 |--------|---------|-------------|
 | `'None'` | dY/dp | When absolute magnitudes matter |
 | `'Half'` | (p/Y) dY/dp | Fractional change in output per unit change in param |
-| `'Full'` | (p/Y)(dY/dp)(Y/p) | Dimensionless comparison across parameters |
+| `'Full'` | (p/Y)(dY/dp) | Dimensionless elasticity — comparable across parameters |
 
 ---
 

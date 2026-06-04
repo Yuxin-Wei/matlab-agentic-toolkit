@@ -1,7 +1,5 @@
 # Copyright 2026 The MathWorks, Inc.
-description: >
-  Reporting and database access skills for AI coding agents. Database Toolbox
-  and MATLAB Report Generator.
+description: Database Toolbox.
 keywords:
   - matlab
   - database

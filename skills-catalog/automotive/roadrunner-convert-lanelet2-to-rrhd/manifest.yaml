@@ -4,6 +4,7 @@ schema_version: 1
 license: MathWorks BSD-3-Clause
 scope: cross-product
 version: "1.0"
+human-description: Convert Lanelet2 maps (.osm) to RoadRunner HD Map (.rrhd) format using MATLAB.
 matlab-release: ">=R2025a"
 requires-tools:
   - evaluate_matlab_code

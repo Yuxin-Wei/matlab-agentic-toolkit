@@ -179,6 +179,7 @@ builtin_blocks_*.json
 # Local settings/notes
 .work/
 .claude/settings.local.json
+.claude/worktrees/
 .mcp.json
 
 # Skill qualification results

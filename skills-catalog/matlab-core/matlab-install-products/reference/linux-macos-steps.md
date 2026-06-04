@@ -27,7 +27,7 @@ fi
 set -eu
 release="R2025b"
 working_folder="/tmp/mpm-YYYYMMDD-HHMMSS"
-input_url="https://raw.githubusercontent.com/mathworks-ref-arch/matlab-dockerfile/refs/heads/main/mpm-input-files/${release}/mpm_input_${release,,}.txt"
+input_url="https://www.mathworks.com/content/dam/mathworks/mathworks-dot-com/products/mpm/mpm-input-${release,,}.txt"
 input_file="${working_folder}/mpm_input_${release,,}.txt"
 
 curl -fL -o "$input_file" "$input_url"

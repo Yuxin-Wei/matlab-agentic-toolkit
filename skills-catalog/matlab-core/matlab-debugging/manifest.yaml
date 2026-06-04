@@ -4,7 +4,8 @@ schema_version: 1
 license: MathWorks BSD-3-Clause
 scope: cross-product
 version: "2.0"
-matlab-release: ">=R2020b"
+human-description: Diagnose MATLAB errors and unexpected behavior.
+matlab-release: ">=R2021a"
 requires-tools:
   - evaluate_matlab_code
   - run_matlab_file

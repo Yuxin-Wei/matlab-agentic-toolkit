@@ -41,9 +41,9 @@
   {
     "id": "linux-install-matlab-and-toolbox-r2025b",
     "name": "Install MATLAB and Signal Processing Toolbox on Linux",
-    "description": "Tests Linux workflow: correct mpm URL, input file from GitHub, product lookup, and verification artifact",
+    "description": "Tests Linux workflow: correct mpm URL, input file from mathworks.com, product lookup, and verification artifact",
     "prompt": "Install MATLAB and Signal Processing Toolbox for 25b on my Linux box. Install to /usr/local/MATLAB/R2025b.",
-    "expected_output": "Agent expands '25b' to 'R2025b', downloads input file from GitHub, uses correct product identifiers from template, uses Linux mpm URL, and verifies completion artifact",
+    "expected_output": "Agent expands '25b' to 'R2025b', downloads input file from mathworks.com, uses correct product identifiers from template, uses Linux mpm URL, and verifies completion artifact",
     "assertions": [
       {
         "id": "a1",
@@ -54,8 +54,8 @@
       {
         "id": "a2",
         "type": "output_contains",
-        "description": "Agent downloads the release-specific input file template from GitHub",
-        "expected": "mpm-input-files/R2025b"
+        "description": "Agent downloads the release-specific input file template",
+        "expected": "mpm_input_r2025b.txt"
       },
       {
         "id": "a3",
@@ -113,6 +113,45 @@
         "type": "convention_followed",
         "description": "Agent cleans up the working folder after successful verification",
         "expected": "rm -rf or Remove-Item of the working folder after confirming matlab.exe exists"
+      }
+    ]
+  },
+  {
+    "id": "release-notes-link-after-install",
+    "name": "Release notes link provided after successful installation",
+    "description": "Tests that the agent provides a correctly formatted MathWorks release notes link after successful installation and verification",
+    "prompt": "Install MATLAB R2026a on my Linux machine to /opt/MATLAB/R2026a.",
+    "expected_output": "After successful verification, agent provides a clickable link to the MATLAB R2026a release notes with the correct release in the URL query parameters",
+    "assertions": [
+      {
+        "id": "a1",
+        "type": "output_contains",
+        "description": "Agent provides release notes URL with correct startrelease parameter",
+        "expected": "startrelease=R2026a"
+      },
+      {
+        "id": "a2",
+        "type": "output_contains",
+        "description": "Agent provides release notes URL with correct endrelease parameter",
+        "expected": "endrelease=R2026a"
+      },
+      {
+        "id": "a3",
+        "type": "output_contains",
+        "description": "Agent uses the correct MathWorks release notes base URL",
+        "expected": "https://www.mathworks.com/help/matlab/release-notes.html"
+      },
+      {
+        "id": "a4",
+        "type": "convention_followed",
+        "description": "Release notes link is shown only after successful verification, not before",
+        "expected": "The release notes link appears after the MATLAB binary verification step reports success"
+      },
+      {
+        "id": "a5",
+        "type": "convention_followed",
+        "description": "Release notes link uses the same release that was installed, not a hardcoded value",
+        "expected": "The URL contains R2026a (matching the requested release), not a different release"
       }
     ]
   }

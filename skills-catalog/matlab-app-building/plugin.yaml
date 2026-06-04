@@ -1,7 +1,6 @@
 # Copyright 2026 The MathWorks, Inc.
 description: >
-  MATLAB app building skills for AI coding agents. App Designer, uifigure,
-  uigridlayout, UI components, callbacks, and uihtml for web integration.
+  Build MATLAB apps programmatically using UI components, layouts, callbacks, and web integration.
 keywords:
   - matlab
   - app-building

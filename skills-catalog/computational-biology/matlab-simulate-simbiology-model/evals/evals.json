@@ -18,13 +18,13 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "DrugConc values are not NaN — constant parameter was properly logged",
-          "expected": "Non-NaN DrugConc values at t=0, 12, 24"
+          "expected": "DrugConc values are numeric (not NaN) at t=0, 12, 24"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "DrugConc = Drug / Vd relationship holds at displayed timepoints",
           "expected": "DrugConc values match Drug / 10 at each timepoint"
         }
@@ -46,13 +46,13 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "All 6 combinations are simulated and reported",
-          "expected": "6 distinct simulation results"
+          "expected": "6 distinct simulation results shown"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Higher ke produces lower Drug at t=48 within each dose group",
           "expected": "Drug(t=48) decreases with increasing ke for both dose levels"
         }
@@ -71,7 +71,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Mean and standard deviation of protein at t=200 are reported from 50 runs",
           "expected": "Mean and std reported; std > 0 confirming stochastic variability"
         }
@@ -95,13 +95,31 @@
           "id": "a2",
           "type": "output_contains",
           "description": "Sensitivity indices are reported for all 4 parameters",
-          "expected": "Quantitative sensitivity measures for ke, ka, k12, k21"
+          "expected": "ke"
+        },
+        {
+          "id": "a2b",
+          "type": "output_contains",
+          "description": "ka parameter included in sensitivity results",
+          "expected": "ka"
+        },
+        {
+          "id": "a2c",
+          "type": "output_contains",
+          "description": "k12 parameter included in sensitivity results",
+          "expected": "k12"
+        },
+        {
+          "id": "a2d",
+          "type": "output_contains",
+          "description": "k21 parameter included in sensitivity results",
+          "expected": "k21"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Parameters are ranked by influence with interpretation",
-          "expected": "Clear ranking from most to least influential"
+          "expected": "Clear ranking from most to least influential parameter based on sensitivity indices"
         }
       ]
     },
@@ -121,7 +139,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "4 Drug values at t=24 are produced and monotonically decrease with ke",
           "expected": "Drug(t=24) for ke=0.5 < ke=0.2 < ke=0.1 < ke=0.05"
         }
@@ -143,15 +161,21 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "All 6 combinations correctly labeled — result ordering not confused",
           "expected": "500mg/ke=0.05 has highest Drug(t=24), 50mg/ke=0.3 has lowest, no label swaps"
         },
         {
           "id": "a3",
           "type": "convention_followed",
-          "description": "Agent uses generate(sc) or equivalent to map results to conditions rather than assuming blocked ordering",
-          "expected": "generate(sc) table used to label results, or results correctly indexed via interleaved pattern"
+          "description": "Agent correctly maps results to conditions — labels are consistent with physical expectations",
+          "expected": "Results labeled correctly: within each ke, higher dose gives more Drug; within each dose, higher ke gives less Drug. No physically impossible label assignments."
+        },
+        {
+          "id": "a4",
+          "type": "output_excludes",
+          "description": "Agent does not combine Scenarios with + operator (Rule 4)",
+          "expected": "sc + "
         }
       ]
     },
@@ -171,15 +195,15 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Trough values reported for all 20 doses — StopTime not truncated",
           "expected": "At least 18-20 trough values shown (not just 1-2 from a truncated simulation)"
         },
         {
           "id": "a3",
-          "type": "output_contains",
-          "description": "Drug accumulation pattern visible — troughs increase then plateau",
-          "expected": "Early troughs increase, later troughs stabilize (steady state)"
+          "type": "convention_followed",
+          "description": "Troughs approach a steady-state level — later troughs stabilize",
+          "expected": "Later trough values converge to a steady level (last 5 troughs within 5% of each other)"
         }
       ]
     },
@@ -196,7 +220,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Drug concentration at t=24 shows significant decay from initial value — proves simulation ran in hours not seconds",
           "expected": "Drug concentration at t=24 is well below 5 mg/L (initial is 10 mg/L); values near 10 indicate time unit mismatch"
         }
@@ -215,7 +239,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Mean and std of Drug at t=24 reported from 50 runs; std > 0 confirming variability",
           "expected": "Mean Drug(t=24) approximately 9-12, std > 0"
         },
@@ -240,7 +264,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "All 6 combinations produce results with correct dose-response relationship",
           "expected": "Higher dose gives more Drug at t=24; higher ke gives less Drug at t=24"
         }

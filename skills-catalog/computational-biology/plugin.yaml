@@ -1,7 +1,5 @@
 # Copyright 2026 The MathWorks, Inc.
-description: >
-  Computational biology skills for AI coding agents. Bioinformatics Toolbox
-  and SimBiology.
+description: SimBiology.
 keywords:
   - matlab
   - bioinformatics

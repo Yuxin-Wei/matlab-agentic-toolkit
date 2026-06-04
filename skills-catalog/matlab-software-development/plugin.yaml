@@ -1,10 +1,11 @@
 # Copyright 2026 The MathWorks, Inc.
 description: >
-  MATLAB software development skills for AI coding agents. Source control,
-  build tools, packaging, code modernization, and development workflows.
+  Modernize legacy code, optimize performance and memory, document and create toolboxes, create projects, and develop build plans.
 keywords:
   - matlab
   - software-development
   - packaging
+  - toolbox
+  - build tool
   - modernization
   - performance

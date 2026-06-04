@@ -28,13 +28,21 @@ If the marketplace is already registered, this is a no-op. Continue to the next 
 
 ### Step 2: Install plugins
 
-Read `<TOOLKIT_ROOT>/.claude-plugin/marketplace.json`, extract the `name` field from each entry in the `plugins` array, and install every plugin:
+Read `<TOOLKIT_ROOT>/.claude-plugin/marketplace.json`, extract the `name` field from each entry in the `plugins` array, and install every plugin **sequentially** (one at a time):
 
 ```bash
 claude plugin install <plugin-name>@matlab-agentic-toolkit
 ```
 
+Do NOT install plugins in parallel.
+
 Claude's native prompt will ask the user to choose scope for each plugin. Do NOT implement your own scope selection — let Claude Code handle it.
+
+**Verification and retry:**
+
+After all sequential installs complete, run `claude plugin list` and compare the output against the expected set from marketplace.json. If any plugins are missing — whether they reported an error or not — retry them one at a time. A single retry is almost always sufficient.
+
+This verification step is required because `claude plugin install` can occasionally report success (exit 0, "Successfully installed" in output) while failing to persist the registration.
 
 ### Step 3: Register MCP server
 
@@ -140,4 +148,3 @@ If MCP tools are not available in the current session:
 Copyright 2026 The MathWorks, Inc.
 
 ----
-

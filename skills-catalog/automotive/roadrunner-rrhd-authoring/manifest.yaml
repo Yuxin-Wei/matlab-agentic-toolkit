@@ -4,6 +4,7 @@ schema_version: 1
 license: MathWorks BSD-3-Clause
 scope: cross-product
 version: "1.0"
+human-description: Build RoadRunner HD Map entities in MATLAB — lanes, boundaries, markings, junctions, signs, signals, barriers, parking.
 matlab-release: ">=R2025a"
 requires-tools:
   - evaluate_matlab_code

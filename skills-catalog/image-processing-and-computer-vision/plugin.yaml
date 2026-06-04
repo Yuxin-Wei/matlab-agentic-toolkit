@@ -1,8 +1,5 @@
 # Copyright 2026 The MathWorks, Inc.
-description: >
-  Image processing and computer vision skills for AI coding agents. Image
-  Processing Toolbox, Computer Vision Toolbox, Lidar Toolbox, and Mapping
-  Toolbox.
+description: Image Processing Toolbox and Computer Vision Toolbox.
 keywords:
   - matlab
   - image-processing

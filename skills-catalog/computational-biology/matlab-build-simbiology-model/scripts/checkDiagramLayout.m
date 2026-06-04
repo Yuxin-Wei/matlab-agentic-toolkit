@@ -1,4 +1,4 @@
-function results = checkDiagramLayout(model)
+function results = checkDiagramLayout(model, ctx)
 % Internal use only
 % Used by the matlab-build-simbiology-model agent skill during diagram layout.
 % NOT FOR EXTERNAL USE - Subject to change.
@@ -6,27 +6,22 @@ function results = checkDiagramLayout(model)
 % CHECKDIAGRAMLAYOUT Run all diagram layout checks in one call.
 %
 %   results = checkDiagramLayout(model)
+%   results = checkDiagramLayout(model, ctx)
 %
-%   Runs containment check and connection-line-through-block check on the
-%   model's diagram. Returns a struct with fields:
+%   Runs containment check, connection-line-through-block check, and
+%   overlap/proximity check on the model's diagram. When ctx (from
+%   buildLayoutContext) is provided, uses cached positions.
+%
+%   Returns a struct with fields:
 %     .containment  — struct array of containment violations
 %     .lineThrough  — struct array of line-through-block violations
-%     .nContainment — number of containment violations
-%     .nLineThrough — number of line-through-block violations
 %     .overlap      — struct array of block overlap/proximity violations
-%     .nOverlap     — number of overlap violations
-%     .nTotal       — total violations (containment + lineThrough + overlap)
+%     .nContainment, .nLineThrough, .nOverlap, .nTotal — counts
 %
-%   Each containment violation has: .rxnIndex, .reaction, .compartment, .type
-%   Each lineThrough violation has: .rxnIndex, .reaction, .species, .blockedBy, .blockedByType
-%   Each overlap violation has: .block1, .block2, .block1Type, .block2Type, .distance
-%
-%   Example:
-%     model = getModelByUUID('uuid-xxx');
-%     r = checkDiagramLayout(model);
-%     fprintf('Total violations: %d\n', r.nTotal);
+%   See also: buildLayoutContext, repositionAllReactions
 
-    MAX_BLOCKS = 400;  % Safety limit — bail out for very large models
+    MAX_BLOCKS = 400;
+
     allRxns  = model.Reactions;
     allSp    = model.Species;
     allComps = model.Compartments;
@@ -34,88 +29,56 @@ function results = checkDiagramLayout(model)
     nS = numel(allSp);
     nC = numel(allComps);
 
-    % Guard: bail out if model exceeds safe size for this algorithm
+    % Guard for very large models
     if (nR + nS) > MAX_BLOCKS
         warning('checkDiagramLayout:modelTooLarge', ...
-            'Model has %d blocks (limit: %d). Skipping layout check to avoid excessive compute time.', ...
-            nR+nS, MAX_BLOCKS);
-        results.containment  = struct('rxnIndex', {}, 'reaction', {}, 'compartment', {}, 'type', {});
-        results.lineThrough  = struct('rxnIndex', {}, 'reaction', {}, 'species', {}, 'blockedBy', {}, 'blockedByType', {});
-        results.overlap      = struct('block1', {}, 'block2', {}, 'block1Type', {}, 'block2Type', {}, 'distance', {});
+            'Model has %d blocks (limit: %d). Skipping layout check.', nR+nS, MAX_BLOCKS);
+        results.containment  = struct('rxnIndex',{},'reaction',{},'compartment',{},'type',{});
+        results.lineThrough  = struct('rxnIndex',{},'reaction',{},'species',{},'blockedBy',{},'blockedByType',{});
+        results.overlap      = struct('block1',{},'block2',{},'block1Type',{},'block2Type',{},'distance',{});
+        results.outOfBounds  = struct('blockIndex',{},'blockName',{},'blockType',{},'position',{},'reason',{});
         results.nContainment = -1;
         results.nLineThrough = -1;
         results.nOverlap     = -1;
+        results.nOutOfBounds = -1;
         results.nTotal       = -1;
         return
     end
 
-    %% === Containment Check ===
-    compBounds = zeros(nC, 4);  % [x1 y1 x2 y2]
-    compNames  = cell(nC, 1);
-    for c = 1:nC
-        p = simbio.diagram.getBlock(allComps(c), 'Position');
-        compBounds(c,:) = [p(1), p(2), p(1)+p(3), p(2)+p(4)];
-        compNames{c} = allComps(c).Name;
+    % Build or use context
+    if nargin < 2 || isempty(ctx)
+        ctx = buildLayoutContext(model);
     end
 
-    contViols = struct('rxnIndex', {}, 'reaction', {}, 'compartment', {}, 'type', {});
+    %% === Containment Check ===
+    contViols = struct('rxnIndex',{},'reaction',{},'compartment',{},'type',{});
     for i = 1:nR
-        rp = simbio.diagram.getBlock(allRxns(i), 'Position');
-        rb = [rp(1), rp(2), rp(1)+rp(3), rp(2)+rp(4)];
-
+        rb = ctx.rxnRect(i,:);
         involvedComps = getInvolvedComps(allRxns(i));
         isInterComp = numel(involvedComps) > 1;
 
         for c = 1:nC
-            cb = compBounds(c,:);
+            cb = ctx.compRect(c,:);
             if rb(1) < cb(3) && rb(3) > cb(1) && rb(2) < cb(4) && rb(4) > cb(2)
-                isInvolved = any(strcmp(compNames{c}, involvedComps));
+                isInvolved = any(strcmp(ctx.compNames{c}, involvedComps));
                 if ~isInvolved
-                    v.rxnIndex = i;
-                    v.reaction = allRxns(i).Reaction;
-                    v.compartment = compNames{c};
-                    v.type = 'WRONG_COMP';
+                    v.rxnIndex = i; v.reaction = allRxns(i).Reaction;
+                    v.compartment = ctx.compNames{c}; v.type = 'WRONG_COMP';
                     contViols(end+1) = v; %#ok<AGROW>
                 elseif isInterComp
-                    v.rxnIndex = i;
-                    v.reaction = allRxns(i).Reaction;
-                    v.compartment = compNames{c};
-                    v.type = 'INTER_COMP_INSIDE_OWN';
+                    v.rxnIndex = i; v.reaction = allRxns(i).Reaction;
+                    v.compartment = ctx.compNames{c}; v.type = 'INTER_COMP_INSIDE_OWN';
                     contViols(end+1) = v; %#ok<AGROW>
                 end
             end
         end
     end
 
-    %% === Line-Through-Block Check ===
-    % Collect all block bounding rects
-    blkRect = zeros(nR+nS, 4);
-    blkName = cell(nR+nS, 1);
-    blkType = cell(nR+nS, 1);
-    blkIdx  = zeros(nR+nS, 1);
-
+    %% === Line-Through-Block Check (using spatial grid) ===
+    lineViols = struct('rxnIndex',{},'reaction',{},'species',{},'blockedBy',{},'blockedByType',{});
     for i = 1:nR
-        p = simbio.diagram.getBlock(allRxns(i), 'Position');
-        blkRect(i,:) = [p(1), p(2), p(1)+p(3), p(2)+p(4)];
-        blkName{i} = allRxns(i).Reaction;
-        blkType{i} = 'rxn';
-        blkIdx(i)  = i;
-    end
-    for i = 1:nS
-        p = simbio.diagram.getBlock(allSp(i), 'Position');
-        k = nR + i;
-        blkRect(k,:) = [p(1), p(2), p(1)+p(3), p(2)+p(4)];
-        blkName{k} = [allSp(i).Parent.Name '.' allSp(i).Name];
-        blkType{k} = 'sp';
-        blkIdx(k)  = i;
-    end
-
-    lineViols = struct('rxnIndex', {}, 'reaction', {}, 'species', {}, ...
-                       'blockedBy', {}, 'blockedByType', {});
-    for i = 1:nR
-        rp = simbio.diagram.getBlock(allRxns(i), 'Position');
-        rcx = rp(1) + rp(3)/2;
-        rcy = rp(2) + rp(4)/2;
+        rcx = ctx.rxnCenter(i,1);
+        rcy = ctx.rxnCenter(i,2);
         connSp = [allRxns(i).Reactants; allRxns(i).Products];
 
         for s = 1:numel(connSp)
@@ -123,22 +86,24 @@ function results = checkDiagramLayout(model)
                 continue
             end
             sp = connSp(s);
-            spp = simbio.diagram.getBlock(sp, 'Position');
-            scx = spp(1) + spp(3)/2;
-            scy = spp(2) + spp(4)/2;
             spName = [sp.Parent.Name '.' sp.Name];
+            spIdx = find(strcmp(ctx.spNames, spName), 1);
+            if isempty(spIdx), continue; end
+            scx = ctx.spCenter(spIdx, 1);
+            scy = ctx.spCenter(spIdx, 2);
 
-            for b = 1:size(blkRect, 1)
-                % Skip self
-                if strcmp(blkType{b}, 'rxn') && blkIdx(b) == i, continue; end
-                if strcmp(blkType{b}, 'sp')  && strcmp(blkName{b}, spName), continue; end
+            % Use spatial grid to find nearby blocks
+            nearbyBlocks = queryGridForLine(ctx.grid, rcx, rcy, scx, scy);
+            for nb = nearbyBlocks
+                % Skip self (reaction) and connected species
+                if nb == i, continue; end
+                if nb > ctx.nR && strcmp(ctx.spNames{nb - ctx.nR}, spName), continue; end
 
-                if lineIntersectsRect(rcx, rcy, scx, scy, blkRect(b,:))
-                    lv.rxnIndex     = i;
-                    lv.reaction     = allRxns(i).Reaction;
-                    lv.species      = spName;
-                    lv.blockedBy    = blkName{b};
-                    lv.blockedByType = blkType{b};
+                if lineIntersectsRect(rcx, rcy, scx, scy, ctx.allRect(nb,:))
+                    lv.rxnIndex = i; lv.reaction = allRxns(i).Reaction;
+                    lv.species = spName;
+                    lv.blockedBy = ctx.allNames{nb};
+                    lv.blockedByType = ctx.allTypes{nb};
                     lineViols(end+1) = lv; %#ok<AGROW>
                 end
             end
@@ -146,40 +111,76 @@ function results = checkDiagramLayout(model)
     end
 
     %% === Overlap / Proximity Check ===
-    % Flag any two non-compartment blocks whose centers are within 10px
     MIN_DIST = 10;
     nBlk = nR + nS;
-    blkCenter = zeros(nBlk, 2);
-    for b = 1:nBlk
-        blkCenter(b,:) = [(blkRect(b,1)+blkRect(b,3))/2, (blkRect(b,2)+blkRect(b,4))/2];
-    end
+    overlapViols = struct('block1',{},'block2',{},'block1Type',{},'block2Type',{},'distance',{});
 
-    overlapViols = struct('block1', {}, 'block2', {}, ...
-                          'block1Type', {}, 'block2Type', {}, 'distance', {});
+    % Use spatial grid: for each block, check nearby blocks
     for a = 1:nBlk
-        for b = a+1:nBlk
-            d = sqrt((blkCenter(a,1)-blkCenter(b,1))^2 + ...
-                     (blkCenter(a,2)-blkCenter(b,2))^2);
+        aCx = ctx.allCenter(a,1); aCy = ctx.allCenter(a,2);
+        searchRect = [aCx-MIN_DIST, aCy-MIN_DIST, aCx+MIN_DIST, aCy+MIN_DIST];
+        nearby = queryGridForRect(ctx.grid, searchRect);
+        for nb = nearby
+            if nb <= a, continue; end  % avoid duplicates (only check b > a)
+            d = sqrt((ctx.allCenter(a,1)-ctx.allCenter(nb,1)).^2 + ...
+                     (ctx.allCenter(a,2)-ctx.allCenter(nb,2)).^2);
             if d < MIN_DIST
-                ov.block1 = blkName{a};
-                ov.block2 = blkName{b};
-                ov.block1Type = blkType{a};
-                ov.block2Type = blkType{b};
+                ov.block1 = ctx.allNames{a}; ov.block2 = ctx.allNames{nb};
+                ov.block1Type = ctx.allTypes{a}; ov.block2Type = ctx.allTypes{nb};
                 ov.distance = round(d, 1);
                 overlapViols(end+1) = ov; %#ok<AGROW>
             end
         end
     end
 
+    %% === Out-of-Bounds Check ===
+    OOB_MARGIN = 100;  % pixels beyond outermost compartment edge
+
+    % Compute model bounding box from compartments
+    if nC > 0
+        modelMinX = min(ctx.compRect(:,1));
+        modelMinY = min(ctx.compRect(:,2));
+        modelMaxX = max(ctx.compRect(:,3));
+        modelMaxY = max(ctx.compRect(:,4));
+    else
+        modelMinX = 0; modelMinY = 0; modelMaxX = 1000; modelMaxY = 1000;
+    end
+
+    oobViols = struct('blockIndex',{},'blockName',{},'blockType',{},...
+        'position',{},'reason',{});
+
+    for a = 1:nBlk
+        bx = ctx.allCenter(a, 1);
+        by = ctx.allCenter(a, 2);
+        reason = '';
+
+        if bx < 0 || by < 0
+            reason = 'NEGATIVE_COORD';
+        elseif bx < modelMinX - OOB_MARGIN || bx > modelMaxX + OOB_MARGIN || ...
+               by < modelMinY - OOB_MARGIN || by > modelMaxY + OOB_MARGIN
+            reason = 'BEYOND_MARGIN';
+        end
+
+        if ~isempty(reason)
+            ov.blockIndex = a;
+            ov.blockName = ctx.allNames{a};
+            ov.blockType = ctx.allTypes{a};
+            ov.position = round(ctx.allCenter(a,:));
+            ov.reason = reason;
+            oobViols(end+1) = ov; %#ok<AGROW>
+        end
+    end
+
     %% === Build results ===
     results.containment  = contViols;
     results.lineThrough  = lineViols;
+    results.overlap      = overlapViols;
+    results.outOfBounds  = oobViols;
     results.nContainment = numel(contViols);
     results.nLineThrough = numel(lineViols);
-    results.overlap      = overlapViols;
     results.nOverlap     = numel(overlapViols);
-    results.nTotal       = numel(contViols) + numel(lineViols) + numel(overlapViols);
-
+    results.nOutOfBounds = numel(oobViols);
+    results.nTotal       = numel(contViols) + numel(lineViols) + numel(overlapViols) + numel(oobViols);
 end
 
 %% === Helper: get compartment names involved in a reaction ===
@@ -194,5 +195,20 @@ function comps = getInvolvedComps(rxn)
     comps = unique(comps);
 end
 
-%% === Helper: parametric line-rect intersection (Liang-Barsky) ===
+%% === Helper: grid query for a rectangle ===
+function blockIndices = queryGridForRect(grid, rect)
+    cs = grid.cellSize;
+    c1 = max(1, floor((rect(1) - grid.minX) / cs) + 1);
+    r1 = max(1, floor((rect(2) - grid.minY) / cs) + 1);
+    c2 = min(grid.nCols, floor((rect(3) - grid.minX) / cs) + 1);
+    r2 = min(grid.nRows, floor((rect(4) - grid.minY) / cs) + 1);
+    blockIndices = [];
+    for r = r1:r2
+        for c = c1:c2
+            blockIndices = [blockIndices, grid.cells{r,c}]; %#ok<AGROW>
+        end
+    end
+    blockIndices = unique(blockIndices);
+end
+
 % Copyright 2026 The MathWorks, Inc.

@@ -15,15 +15,27 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Model has the correct structure: 2 compartments, 2 species, 4 reactions",
           "expected": "2 compartments, 2 species, 4 reactions"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Simulation produces a valid PK profile — Drug decreases over time",
           "expected": "Drug values at t=0, 6, 12, 24 displayed; Drug at t=24 < Drug at t=0"
+        },
+        {
+          "id": "a4",
+          "type": "output_excludes",
+          "description": "Agent does not use deprecated InitialAmount property (Rule 6)",
+          "expected": "InitialAmount"
+        },
+        {
+          "id": "a5",
+          "type": "output_excludes",
+          "description": "Agent does not use deprecated ConstantAmount property (Rule 6)",
+          "expected": "ConstantAmount"
         }
       ]
     },
@@ -43,13 +55,13 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Model has correct component counts after additions",
           "expected": "2 new doses, observable, and variant confirmed on the model"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Simulation with repeat dose runs and produces valid output",
           "expected": "Simulation completes with dose-driven Drug profile"
         }
@@ -71,7 +83,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Model structure is correct after modifications: metabolism reaction present, elimination gone, no doses",
           "expected": "kmet parameter, metabolism reaction present, no elimination, 0 doses"
         }
@@ -81,9 +93,9 @@
       "id": "layout-two-compartment-model",
       "name": "Diagram a two-compartment model with varied species names",
       "description": "Tests diagram layout with species of different name lengths, requiring content-aware sizing and compartment containment.",
-      "prompt": "Setup: close any open SimBiology apps and run `sbioreset` before starting. Teardown: close apps and run `sbioreset` when done.\n\nLoad the model from evals/files/TwoCompPK_Extended.sbproj and create a diagram for it.",
+      "prompt": "Setup: run `sbioreset` before starting. Teardown: run `sbioreset` when done.\n\nLoad the model from evals/files/TwoCompPK_Extended.mat and create a diagram for it.",
       "context": {
-        "files": ["evals/files/TwoCompPK_Extended.sbproj"]
+        "files": ["evals/files/TwoCompPK_Extended.mat"]
       },
       "assertions": [
         {
@@ -93,21 +105,21 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
-          "description": "Species blocks accommodate different name lengths — DrugAlbuminComplex is not truncated",
-          "expected": "DrugAlbuminComplex block is wider than Drug block"
+          "type": "convention_followed",
+          "description": "Diagram has no overlap violations — species with long names (DrugAlbuminComplex) do not overlap other blocks",
+          "expected": "checkDiagramLayout reports 0 overlap violations, or no overlapping blocks reported"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Diagram passes layout validation with no violations",
-          "expected": "0 total violations in validation output"
+          "expected": "checkDiagramLayout reports 0 total violations (nTotal = 0 or 'Remaining violations: 0')"
         },
         {
           "id": "a4",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "All species are contained within their parent compartment boundaries",
-          "expected": "0 containment violations"
+          "expected": "0 containment violations reported by checkDiagramLayout"
         }
       ]
     },
@@ -115,7 +127,10 @@
       "id": "layout-complex-multi-compartment",
       "name": "Diagram a 4-compartment PKPD model",
       "description": "Tests complex diagram layout with multiple connected compartments, requiring logical spatial organization and clean reaction routing.",
-      "prompt": "Setup: close any open SimBiology apps and run `sbioreset` before starting. Teardown: close apps and run `sbioreset` when done.\n\nBuild and diagram a PKPD model with 4 compartments: Central (Drug, DrugBound, Metabolite), Peripheral (DrugPeripheral), Tumor (DrugTumor, TumorCells), and Effect (Biomarker). Central is the main compartment connecting to the others. Add reactions for elimination (Drug -> null), distribution (Drug <-> DrugPeripheral), binding (Drug -> DrugBound), metabolism (Drug -> Metabolite), and tumor uptake (Drug -> DrugTumor). Add a rule linking Drug to Biomarker. Make the diagram readable and well-organized.",
+      "prompt": "Setup: run `sbioreset` before starting. Teardown: run `sbioreset` when done.\n\nLoad the model from evals/files/PKPD_4Comp.mat and create a diagram for it. Central is the main hub compartment connecting to the others — position it accordingly.",
+      "context": {
+        "files": ["evals/files/PKPD_4Comp.mat"]
+      },
       "assertions": [
         {
           "id": "a1",
@@ -124,15 +139,15 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Central compartment is positioned reflecting its hub role — adjacent to other compartments",
           "expected": "Central positioned centrally or adjacently to connected compartments"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Diagram passes layout validation with no violations",
-          "expected": "0 total violations in final validation output"
+          "expected": "checkDiagramLayout reports 0 total violations (nTotal = 0 or 'Remaining violations: 0')"
         }
       ]
     },
@@ -156,8 +171,8 @@
         {
           "id": "a3",
           "type": "convention_followed",
-          "description": "Step 2 checks whether the Builder is already open before launching to avoid errors",
-          "expected": "Check for existing Builder before opening"
+          "description": "Step 2 opens the Builder successfully without error",
+          "expected": "Builder opens and displays the model diagram without throwing an error"
         },
         {
           "id": "a4",
@@ -167,9 +182,9 @@
         },
         {
           "id": "a5",
-          "type": "output_contains",
-          "description": "Workspace is clean after reset",
-          "expected": "sbioroot is empty or confirmed clean"
+          "type": "convention_followed",
+          "description": "Session is cleaned up — apps closed and sbioreset called",
+          "expected": "Both app closure and sbioreset performed during cleanup"
         }
       ]
     },
@@ -186,15 +201,9 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Reaction is structured correctly: L and R are reactants, C is product",
           "expected": "Reaction string shows L + R on left side of arrow, C on right side"
-        },
-        {
-          "id": "a3",
-          "type": "output_contains",
-          "description": "Model simulates correctly — C forms over time as L and R are consumed",
-          "expected": "Simulation shows C increasing, L and R decreasing"
         }
       ]
     },
@@ -211,13 +220,13 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Model has clearance as a parameter with ke derived from CL/V",
           "expected": "Clearance parameter present; ke = CL/V relationship established (via rule or direct calculation)"
         },
         {
           "id": "a3",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Simulation produces correct initial concentration and exponential decay",
           "expected": "C(0) = 500/50 = 10 mg/L; C(24) approximately 10*exp(-0.1*24) = 0.9 mg/L"
         }
@@ -236,7 +245,7 @@
         },
         {
           "id": "a2",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "All 5 compartments have globally unique names — no duplicates",
           "expected": "5 compartments with distinct names (e.g., Plasma, Muscle_EC, Muscle_IC, Liver_EC, Liver_IC or similar unique naming scheme)"
         },
@@ -248,9 +257,71 @@
         },
         {
           "id": "a4",
-          "type": "output_contains",
+          "type": "convention_followed",
           "description": "Simulation produces valid dynamics — plasma Drug decreases as tissues absorb",
           "expected": "Plasma Drug decreases from 100; tissue compartments accumulate drug; liver intracellular decreases due to metabolism"
+        }
+      ]
+    },
+    {
+      "id": "rules-and-events-constant-false",
+      "name": "Build model with rules and events requiring Constant=false",
+      "description": "Tests whether the agent correctly sets Constant=false on parameters before using them as rule LHS targets or event action targets — a common source of runtime errors that the skill explicitly teaches.",
+      "prompt": "Setup: run `sbioreset` before starting. Teardown: run `sbioreset` when done.\n\nBuild a receptor-occupancy model: a single compartment with species Target (initial 100), Drug (initial 50), and Complex (initial 0). Add a binding reaction Drug + Target -> Complex (kon=0.01, MassAction) and dissociation Complex -> Drug + Target (koff=0.1, MassAction).\n\nThen add:\n1. A computed parameter called RO (receptor occupancy) defined by a repeated-assignment rule: RO = Complex / (Target + Complex)\n2. An event: when RO exceeds 0.8, halve the kon rate constant (kon = kon * 0.5)\n\nSimulate for 50 time units and show me RO over time.",
+      "assertions": [
+        {
+          "id": "a1",
+          "type": "code_executes",
+          "description": "All generated code runs without error — catches 'Cannot set the value of a constant' errors from missing Constant=false"
+        },
+        {
+          "id": "a2",
+          "type": "output_excludes",
+          "description": "No 'Cannot set the value of a constant' error — proves Constant=false was set on rule LHS parameter",
+          "expected": "Cannot set the value of a constant"
+        },
+        {
+          "id": "a3",
+          "type": "output_excludes",
+          "description": "No 'Unable to evaluate' error — proves Constant=false was set on event target parameter",
+          "expected": "Unable to evaluate"
+        },
+        {
+          "id": "a4",
+          "type": "convention_followed",
+          "description": "Simulation shows RO increasing from 0 as Complex forms",
+          "expected": "RO starts at 0 (no complex yet) and increases over time as binding occurs; values displayed"
+        }
+      ]
+    },
+    {
+      "id": "save-and-reload-model",
+      "name": "Save model to file and reload it",
+      "description": "Tests that the agent uses the modern save pattern (save to .mat) rather than the deprecated sbiosaveproject. The skill explicitly teaches this pattern.",
+      "prompt": "Setup: run `sbioreset` before starting. Teardown: run `sbioreset` when done.\n\nBuild a simple one-compartment model: Drug (initial 100), ke=0.1, elimination via MassAction. Then save it to a file so I can reload it in a future session. After saving, clear the workspace and reload the model from the file to prove the round-trip works. Show me the model structure after reloading.",
+      "assertions": [
+        {
+          "id": "a1",
+          "type": "code_executes",
+          "description": "All generated code runs without error — save and reload complete successfully"
+        },
+        {
+          "id": "a2",
+          "type": "output_excludes",
+          "description": "Agent does not use deprecated sbiosaveproject",
+          "expected": "sbiosaveproject("
+        },
+        {
+          "id": "a3",
+          "type": "convention_followed",
+          "description": "Model is saved using save() to a .mat file",
+          "expected": "save() function used with .mat extension; FAIL if sbiosaveproject or sbioexport used instead"
+        },
+        {
+          "id": "a4",
+          "type": "convention_followed",
+          "description": "Reloaded model has the same structure as the original",
+          "expected": "After load(), model has 1 compartment, 1 species (Drug), 1 parameter (ke), 1 reaction"
         }
       ]
     }

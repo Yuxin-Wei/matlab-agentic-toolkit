@@ -1,8 +1,5 @@
 # Copyright 2026 The MathWorks, Inc.
-description: >
-  Automotive skills for AI coding agents. Automated Driving Toolbox,
-  RoadRunner, RoadRunner Scene Builder, and MATLAB-side vehicle
-  dynamics workflows.
+description: Automated Driving Toolbox, RoadRunner, and RoadRunner Scene Builder.
 keywords:
   - matlab
   - automotive

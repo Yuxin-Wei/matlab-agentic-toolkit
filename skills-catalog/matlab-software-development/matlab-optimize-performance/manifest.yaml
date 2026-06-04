@@ -2,7 +2,8 @@ schema_version: 1
 license: MathWorks BSD-3-Clause
 scope: cross-product
 version: "1.0"
-matlab-release: ">=R2019b"
+human-description: Optimize performance of MATLAB code.
+matlab-release: ">=R2021a"
 requires-tools:
   - evaluate_matlab_code
   - check_matlab_code

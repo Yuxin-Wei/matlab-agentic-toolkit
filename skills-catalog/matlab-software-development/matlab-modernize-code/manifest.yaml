@@ -3,8 +3,9 @@
 schema_version: 1
 license: MathWorks BSD-3-Clause
 scope: cross-product
-version: "1.1"
-matlab-release: ">=R2020b"
+version: "1.2"
+human-description: Modernize deprecated MATLAB functions and patterns.
+matlab-release: ">=R2021a"
 requires-tools:
   - evaluate_matlab_code
   - check_matlab_code

@@ -1,7 +1,5 @@
 # Copyright 2026 The MathWorks, Inc.
-description: >
-  RF and mixed-signal skills for AI coding agents. RF Toolbox and
-  Mixed-Signal Blockset.
+description: Antenna Toolbox, RF Toolbox, RF PCB Toolbox, and SerDes Toolbox.
 keywords:
   - matlab
   - rf
